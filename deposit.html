@@ -1,0 +1,682 @@
+<div class="wallet-wrapper" style="color:#FFF;">
+  <div class="wallet-left">
+    <div class="wallet-tabs">
+      <button class="active" style="color: #fff;">Deposit</button>
+    </div>
+
+    <div class="input-group" style="flex-direction: column;">
+      <label style="color:#000 !important;">Select Method</label>
+      <div class="method-icons">
+                <div class="card instantmobile" (click)="toggleMethod('autoupi')" [class.active]="selectedMethod === 'autoupi'" style="
+    display: flex;
+    padding : 2px !important;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 30px;
+        width: 90%;
+}">
+          <img src="https://play-lh.googleusercontent.com/2BQu8Y7Ah9Gh9CZvmaMSYIcZvdO4KfdJ26EZ1WGyaOG_xxeDxNn-AZYxOtQJvyQQPFY"
+               title="Auto UPI" style="width:56px; height:56px;">
+                 <div class="card-title">Instant Upi (1-2 minutes)</div>
+               </div>
+        <div class="mobile-icons" style="    align-items: center;">
+        
+          <img src="https://img.icons8.com/color/48/bitcoin--v1.png"
+               title="Crypto" (click)="toggleMethod('crypto')" [class.active]="selectedMethod === 'crypto'">
+          <img src="https://ps.w.org/phonepe-payment-solutions/assets/icon-256x256.png?rev=2756185"
+               title="PhonePe" (click)="toggleMethod('phonepe')" [class.active]="selectedMethod === 'phonepe'">
+          <img src="https://img.icons8.com/color/48/google-pay-india.png"
+               title="GPay" (click)="toggleMethod('gpay')" [class.active]="selectedMethod === 'gpay'">
+          <img src="https://img.icons8.com/color/48/paytm.png"
+               title="Paytm" (click)="toggleMethod('paytm')" [class.active]="selectedMethod === 'paytm'">
+          <img src="https://cdn-icons-png.flaticon.com/512/744/744463.png"
+               title="Bank" (click)="toggleMethod('bank')" [class.active]="selectedMethod === 'bank'">
+        </div>
+        <div class="card-container">
+          <div class="card" (click)="toggleMethod('autoupi')" [class.active]="selectedMethod === 'autoupi'">
+            <div class="icon-row">
+              <img src="https://play-lh.googleusercontent.com/2BQu8Y7Ah9Gh9CZvmaMSYIcZvdO4KfdJ26EZ1WGyaOG_xxeDxNn-AZYxOtQJvyQQPFY">
+            </div>
+            <div class="card-title">Instant UPI</div>
+          </div>
+          <div class="card" (click)="toggleMethod('crypto')" [class.active]="selectedMethod === 'crypto'">
+            <div class="icon-row">
+              <img src="https://img.icons8.com/color/48/bitcoin--v1.png">
+            </div>
+            <div class="card-title">Crypto Direct</div>
+          </div>
+          <div class="card" (click)="toggleMethod('phonepe')" [class.active]="selectedMethod === 'phonepe'">
+            <div class="icon-row">
+              <img src="https://ps.w.org/phonepe-payment-solutions/assets/icon-256x256.png?rev=2756185">
+            </div>
+            <div class="card-title">PhonePe</div>
+          </div>
+          <div class="card" (click)="toggleMethod('gpay')" [class.active]="selectedMethod === 'gpay'">
+            <div class="icon-row">
+              <img src="https://img.icons8.com/color/48/google-pay-india.png">
+            </div>
+            <div class="card-title">GPay</div>
+          </div>
+          <div class="card" (click)="toggleMethod('paytm')" [class.active]="selectedMethod === 'paytm'">
+            <div class="icon-row">
+              <img src="https://img.icons8.com/color/48/paytm.png">
+            </div>
+            <div class="card-title">Paytm</div>
+          </div>
+          <div class="card" (click)="toggleMethod('bank')" [class.active]="selectedMethod === 'bank'">
+            <div class="icon-row">
+              <img src="https://cdn-icons-png.flaticon.com/512/744/744463.png">
+            </div>
+            <div class="card-title">Bank</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+      
+/* Desktop View: Column layout + top padding */
+@media (min-width: 992px) {
+  .crypto013 {
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+  }
+  .instantmobile{
+      display: none !important;
+  }
+}
+  </style>
+   <div *ngIf="selectedMethod === 'crypto'"  class="crypto013" style="justify-content: center;display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
+    <button 
+      *ngFor="let crypto of cryptos" 
+      (click)="selectedCrypto = crypto"
+      [style.backgroundColor]="selectedCrypto?.name === crypto.name ? '#007bff' : '#f0f0f0'"
+      [style.color]="selectedCrypto?.name === crypto.name ? 'white' : 'black'"
+      style="padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer;
+    font-weight: 900;"
+    >
+      {{ crypto.name }}
+    </button>
+  </div>
+
+  <div class="wallet-right">
+    <!--<h3>Deposit</h3>-->
+    <div class="amount-pay" *ngIf="selectedMethod !== 'crypto'" style="display:none;">{{ displayAmount }}</div>
+    <div class="input-group" *ngIf="selectedMethod !== 'crypto'">
+      <label style="color:#000 !important;">Enter amount</label>
+      <input type="text" class="amount-input" [value]="'₹' + amountInput"  />
+      <div class="quick-amounts" style="flex-wrap: nowrap; overflow: scroll; color: #000 !important;">
+        <button (click)="updateAmountInput(200)" [class.active]="amountInput === 200">₹200.00</button>
+        <button (click)="updateAmountInput(500)" [class.active]="amountInput === 500">₹500.00</button>
+        <button (click)="updateAmountInput(1000)" [class.active]="amountInput === 1000">₹1000.00</button>
+        <button (click)="updateAmountInput(5000)" [class.active]="amountInput === 5000">₹5000.00</button>
+                <button (click)="updateAmountInput(10000)" [class.active]="amountInput === 10000">₹10000.00</button>
+
+      </div>
+    </div>
+
+<!-- Conditionally shown payment sections -->
+<div *ngIf="selectedMethod === 'crypto'" class="sub-options">
+  <h4 style="color:#000 !important;">Crypto Options</h4>
+
+  <div *ngIf="selectedCrypto" style="border: 1px solid #ccc; padding: 12px; border-radius: 8px; text-align: center;">
+    <h5 style="color:#000 !important;">{{ selectedCrypto.name }}</h5>
+
+    <!-- USDT network selection -->
+    <div *ngIf="selectedCrypto.name === 'USDT'" style="margin-bottom: 16px;">
+      <label style="font-weight: bold; color:#000 !important;">Select Network:</label>
+      <select [(ngModel)]="selectedUSDTNetwork" style="margin-left: 8px; padding: 6px; border-radius: 4px;">
+        <option *ngFor="let network of usdtNetworks" [value]="network">{{ network }}</option>
+      </select>
+    </div>
+
+    <!-- Dynamic QR Image -->
+    <img 
+      [src]="selectedCrypto.name === 'USDT' ? usdtNetworkData[selectedUSDTNetwork]?.qrImage : selectedCrypto.qrImage" 
+      alt="QR Code" 
+      style="width: 120px; height: 120px; margin: 10px 0;"
+    >
+
+    <!-- Wallet Address and Copy -->
+    <div style="display: flex; gap: 4px; margin-top: 8px;">
+      <input 
+        type="text" 
+        [value]="selectedCrypto.name === 'USDT' ? usdtNetworkData[selectedUSDTNetwork]?.address : selectedCrypto.address" 
+        readonly 
+        style="flex: 1; padding: 6px;"
+      >
+      <button 
+        (click)="copyToClipboard(selectedCrypto.name === 'USDT' ? usdtNetworkData[selectedUSDTNetwork]?.address : selectedCrypto.address)" 
+        style="padding: 6px 10px; cursor: pointer;"
+      >
+        Copy
+      </button>
+    </div>
+
+    <!-- Transaction Screenshot Upload -->
+    <div class="form-group" style="margin-top: 16px;">
+      <label style="color:#000 !important; display: block; font-weight: bold; margin-bottom: 8px;">Upload Screenshot</label>
+      <div 
+        (click)="fileInput.click()" 
+        style="padding: 12px; border: 2px dashed #007bff; border-radius: 6px; cursor: pointer; color: #007bff; text-align: center; background-color: #f8f9fa;"
+      >
+        📤 Click to Upload Transaction Screenshot
+        <span *ngIf="selectedFileName" style="display: block; margin-top: 8px; color: green; font-weight: 500;">
+          ✔ {{ selectedFileName }}
+        </span>
+      </div>
+      <input 
+        #fileInput 
+        type="file" 
+        formControlName="depo_proof" 
+        (change)="onFileSelected($event)" 
+        class="d-none"
+      >
+      <div *ngIf="(depositFormControl.depo_proof.touched || submitted) && depositFormControl.depo_proof.errors?.required" style="color: red; margin-top: 6px; font-size: 14px;">
+        Please upload screenshot
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div *ngIf="selectedMethod === 'phonepe'" class="sub-options">
+      <h4 style="color:#000 !important;">PhonePe QR</h4>
+      <div class="scanner" style="
+    display: flex;
+    flex-direction: column;">
+          <div>
+       <span style="font-size: 14px; user-select: all; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;color:#000 !important;">
+    {{ phonepe }}
+  </span>
+
+  <button (click)="copyToClipboard(phonepe)" 
+          style="border: 1px solid #ccc; background: white; cursor: pointer; border-radius: 4px; padding: 4px;">
+    <!-- Copy SVG Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="black">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v16h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 18H8V7h11v16z"/>
+    </svg>
+  </button>
+  </div>
+          <img [src]="qrcode" alt="PhonePe">
+          </div>
+      <div class="utr-input" >
+           <div class="form-group" style="margin-bottom: 16px;">
+  <label class="label" style="color:#000 !important; display: block; font-weight: bold; margin-bottom: 8px;">Upload Screenshot</label>
+  
+  <div 
+    class="upload-box" 
+    (click)="fileInput.click()" 
+    style="padding: 12px; border: 2px dashed #007bff; border-radius: 6px; cursor: pointer; color: #007bff; text-align: center; background-color: #f8f9fa;"
+  >
+    📤 Click to Upload Transaction Screenshot
+    <span 
+      *ngIf="selectedFileName" 
+      class="file-indicator" 
+      style="display: block; margin-top: 8px; color: green; font-weight: 500;"
+    >
+      ✔ {{ selectedFileName }}
+    </span>
+  </div>
+
+  <input 
+    #fileInput 
+    type="file" 
+    formControlName="depo_proof" 
+    (change)="onFileSelected($event)" 
+    class="d-none"
+  >
+
+  <div 
+    class="text-danger"
+    *ngIf="(depositFormControl.depo_proof.touched || submitted) && depositFormControl.depo_proof.errors?.required"
+    style="color: red; margin-top: 6px; font-size: 14px;"
+  >
+    Please upload screenshot
+  </div>
+</div>
+
+        <label style="color:#000 !important;">UTR ID</label>
+        <input type="text" placeholder="Enter UTR ID">
+      </div>
+    </div>
+
+    <div *ngIf="selectedMethod === 'gpay'" class="sub-options">
+      <h4 style="color:#000 !important;">Google Pay</h4>
+        <div class="scanner" style="
+    display: flex;
+    flex-direction: column;">
+          <div>
+       <span style="font-size: 14px; user-select: all; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;color:#000 !important;">
+    {{ gpay }}
+  </span>
+
+  <button (click)="copyToClipboard(gpay)" 
+          style="border: 1px solid #ccc; background: white; cursor: pointer; border-radius: 4px; padding: 4px;">
+    <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="black">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v16h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 18H8V7h11v16z"/>
+    </svg>
+  </button>
+  
+  </div>
+            <img [src]="qrcode" alt="PhonePe">
+
+  </div>
+      <div class="utr-input">
+        <label style="color:#000 !important;">Transaction ID</label>
+        <input type="text" placeholder="Enter Transaction ID">
+      </div>
+    </div>
+
+    <div *ngIf="selectedMethod === 'paytm'" class="sub-options">
+      <h4 style="color:#000 !important;">Paytm</h4>
+        <div class="scanner" style="
+    display: flex;
+    flex-direction: column;">
+          <div>
+       <span style="font-size: 14px; user-select: all; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;color:#000 !important;">
+    {{ paytm }}
+  </span>
+
+  <button (click)="copyToClipboard(paytm)" 
+          style="border: 1px solid #ccc; background: white; cursor: pointer; border-radius: 4px; padding: 4px;">
+    <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="black">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v16h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 18H8V7h11v16z"/>
+    </svg>
+  </button>
+  
+  </div>
+            <img [src]="qrcode" alt="PhonePe">
+
+  </div>
+      <div class="utr-input">
+        <label style="color:#000 !important;">Reference No.</label>
+        <input type="text" placeholder="Enter Reference Number">
+      </div>
+    </div>
+
+    <div *ngIf="selectedMethod === 'bank'" class="sub-options">
+      <h4 style="color:#000 !important;">Bank Transfer</h4>
+      <div class="scanner">
+       <div style="font-family: Arial, sans-serif; max-width: 300px;">
+  <div style="margin-bottom: 10px;">
+    <label style="color:#000 !important;font-weight: bold;">Account No:</label><br>
+    <input id="accountNo" type="text" value="{{ accountNo }}" readonly style="width: 80%; padding: 5px; border: 1px solid #ccc;">
+    <span (click)="copyToClipboard(accountNo)" style="cursor: pointer; margin-left: 5px;">📋</span>
+  </div>
+
+  <div style="margin-bottom: 10px;">
+    <label style="color:#000 !important;font-weight: bold;">IFSC:</label><br>
+    <input id="ifsc" type="text" value="{{ ifsc }}" readonly style="width: 80%; padding: 5px; border: 1px solid #ccc;">
+    <span (click)="copyToClipboard(ifsc)" style="cursor: pointer; margin-left: 5px;">📋</span>
+  </div>
+
+  <div style="margin-bottom: 10px;">
+    <label style="color:#000 !important;font-weight: bold;">Bank Name:</label><br>
+    <input id="accountName" type="text" value="{{ accountName }}" readonly style="width: 80%; padding: 5px; border: 1px solid #ccc;">
+    <span (click)="copyToClipboard(accountName)" style="cursor: pointer; margin-left: 5px;">📋</span>
+  </div>
+
+ 
+</div>
+      </div>
+      <div class="utr-input">
+        <label style="color:#000 !important;">Transaction ID</label>
+        <input type="text" placeholder="Enter Transaction ID">
+      </div>
+    </div>
+
+    <div *ngIf="selectedMethod === 'autoupi'" class="sub-options">
+      <h4 style="color:#000 !important;">Instant UPI</h4>
+    </div>
+
+    <div class="info-text">Total amount with commission. The final amount may differ from the indicated.</div>
+    <button class="pay-button"  [disabled]="isDepositProceed" (click)="proceedDeposit()">Pay</button>
+  </div>
+</div>
+
+
+<div class="wallet-wrapper" style="color:#FFF;">
+  <div class="wallet-left">
+    <div class="wallet-tabs">
+      <button class="active" style="color: #fff;">Deposit</button>
+    </div>
+
+    <div class="input-group" style="flex-direction: column;">
+      <label style="color:#000 !important;">Select Method</label>
+      <div class="method-icons">
+                <div class="card instantmobile" (click)="toggleMethod('autoupi')" [class.active]="selectedMethod === 'autoupi'" style="
+    display: flex;
+    padding : 2px !important;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 30px;
+        width: 90%;
+}">
+          <img src="https://play-lh.googleusercontent.com/2BQu8Y7Ah9Gh9CZvmaMSYIcZvdO4KfdJ26EZ1WGyaOG_xxeDxNn-AZYxOtQJvyQQPFY"
+               title="Auto UPI" style="width:56px; height:56px;">
+                 <div class="card-title">Instant Upi (1-2 minutes)</div>
+               </div>
+        <div class="mobile-icons" style="    align-items: center;">
+        
+          <img src="https://img.icons8.com/color/48/bitcoin--v1.png"
+               title="Crypto" (click)="toggleMethod('crypto')" [class.active]="selectedMethod === 'crypto'">
+          <img src="https://ps.w.org/phonepe-payment-solutions/assets/icon-256x256.png?rev=2756185"
+               title="PhonePe" (click)="toggleMethod('phonepe')" [class.active]="selectedMethod === 'phonepe'">
+          <img src="https://img.icons8.com/color/48/google-pay-india.png"
+               title="GPay" (click)="toggleMethod('gpay')" [class.active]="selectedMethod === 'gpay'">
+          <img src="https://img.icons8.com/color/48/paytm.png"
+               title="Paytm" (click)="toggleMethod('paytm')" [class.active]="selectedMethod === 'paytm'">
+          <img src="https://cdn-icons-png.flaticon.com/512/744/744463.png"
+               title="Bank" (click)="toggleMethod('bank')" [class.active]="selectedMethod === 'bank'">
+        </div>
+        <div class="card-container">
+          <div class="card" (click)="toggleMethod('autoupi')" [class.active]="selectedMethod === 'autoupi'">
+            <div class="icon-row">
+              <img src="https://play-lh.googleusercontent.com/2BQu8Y7Ah9Gh9CZvmaMSYIcZvdO4KfdJ26EZ1WGyaOG_xxeDxNn-AZYxOtQJvyQQPFY">
+            </div>
+            <div class="card-title">Instant UPI</div>
+          </div>
+          <div class="card" (click)="toggleMethod('crypto')" [class.active]="selectedMethod === 'crypto'">
+            <div class="icon-row">
+              <img src="https://img.icons8.com/color/48/bitcoin--v1.png">
+            </div>
+            <div class="card-title">Crypto Direct</div>
+          </div>
+          <div class="card" (click)="toggleMethod('phonepe')" [class.active]="selectedMethod === 'phonepe'">
+            <div class="icon-row">
+              <img src="https://ps.w.org/phonepe-payment-solutions/assets/icon-256x256.png?rev=2756185">
+            </div>
+            <div class="card-title">PhonePe</div>
+          </div>
+          <div class="card" (click)="toggleMethod('gpay')" [class.active]="selectedMethod === 'gpay'">
+            <div class="icon-row">
+              <img src="https://img.icons8.com/color/48/google-pay-india.png">
+            </div>
+            <div class="card-title">GPay</div>
+          </div>
+          <div class="card" (click)="toggleMethod('paytm')" [class.active]="selectedMethod === 'paytm'">
+            <div class="icon-row">
+              <img src="https://img.icons8.com/color/48/paytm.png">
+            </div>
+            <div class="card-title">Paytm</div>
+          </div>
+          <div class="card" (click)="toggleMethod('bank')" [class.active]="selectedMethod === 'bank'">
+            <div class="icon-row">
+              <img src="https://cdn-icons-png.flaticon.com/512/744/744463.png">
+            </div>
+            <div class="card-title">Bank</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+      
+/* Desktop View: Column layout + top padding */
+@media (min-width: 992px) {
+  .crypto013 {
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+  }
+  .instantmobile{
+      display: none !important;
+  }
+}
+  </style>
+   <div *ngIf="selectedMethod === 'crypto'"  class="crypto013" style="justify-content: center;display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
+    <button 
+      *ngFor="let crypto of cryptos" 
+      (click)="selectedCrypto = crypto"
+      [style.backgroundColor]="selectedCrypto?.name === crypto.name ? '#007bff' : '#f0f0f0'"
+      [style.color]="selectedCrypto?.name === crypto.name ? 'white' : 'black'"
+      style="padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer;
+    font-weight: 900;"
+    >
+      {{ crypto.name }}
+    </button>
+  </div>
+
+  <div class="wallet-right">
+    <!--<h3>Deposit</h3>-->
+    <div class="amount-pay" *ngIf="selectedMethod !== 'crypto'" style="display:none;">{{ displayAmount }}</div>
+    <div class="input-group" *ngIf="selectedMethod !== 'crypto'">
+      <label style="color:#000 !important;">Enter amount</label>
+      <input type="text" class="amount-input" [value]="'₹' + amountInput"  />
+      <div class="quick-amounts" style="flex-wrap: nowrap; overflow: scroll; color: #000 !important;">
+        <button (click)="updateAmountInput(200)" [class.active]="amountInput === 200">₹200.00</button>
+        <button (click)="updateAmountInput(500)" [class.active]="amountInput === 500">₹500.00</button>
+        <button (click)="updateAmountInput(1000)" [class.active]="amountInput === 1000">₹1000.00</button>
+        <button (click)="updateAmountInput(5000)" [class.active]="amountInput === 5000">₹5000.00</button>
+                <button (click)="updateAmountInput(10000)" [class.active]="amountInput === 10000">₹10000.00</button>
+
+      </div>
+    </div>
+
+<!-- Conditionally shown payment sections -->
+<div *ngIf="selectedMethod === 'crypto'" class="sub-options">
+  <h4 style="color:#000 !important;">Crypto Options</h4>
+
+  <div *ngIf="selectedCrypto" style="border: 1px solid #ccc; padding: 12px; border-radius: 8px; text-align: center;">
+    <h5 style="color:#000 !important;">{{ selectedCrypto.name }}</h5>
+
+    <!-- USDT network selection -->
+    <div *ngIf="selectedCrypto.name === 'USDT'" style="margin-bottom: 16px;">
+      <label style="font-weight: bold; color:#000 !important;">Select Network:</label>
+      <select [(ngModel)]="selectedUSDTNetwork" style="margin-left: 8px; padding: 6px; border-radius: 4px;">
+        <option *ngFor="let network of usdtNetworks" [value]="network">{{ network }}</option>
+      </select>
+    </div>
+
+    <!-- Dynamic QR Image -->
+    <img 
+      [src]="selectedCrypto.name === 'USDT' ? usdtNetworkData[selectedUSDTNetwork]?.qrImage : selectedCrypto.qrImage" 
+      alt="QR Code" 
+      style="width: 120px; height: 120px; margin: 10px 0;"
+    >
+
+    <!-- Wallet Address and Copy -->
+    <div style="display: flex; gap: 4px; margin-top: 8px;">
+      <input 
+        type="text" 
+        [value]="selectedCrypto.name === 'USDT' ? usdtNetworkData[selectedUSDTNetwork]?.address : selectedCrypto.address" 
+        readonly 
+        style="flex: 1; padding: 6px;"
+      >
+      <button 
+        (click)="copyToClipboard(selectedCrypto.name === 'USDT' ? usdtNetworkData[selectedUSDTNetwork]?.address : selectedCrypto.address)" 
+        style="padding: 6px 10px; cursor: pointer;"
+      >
+        Copy
+      </button>
+    </div>
+
+    <!-- Transaction Screenshot Upload -->
+    <div class="form-group" style="margin-top: 16px;">
+      <label style="color:#000 !important; display: block; font-weight: bold; margin-bottom: 8px;">Upload Screenshot</label>
+      <div 
+        (click)="fileInput.click()" 
+        style="padding: 12px; border: 2px dashed #007bff; border-radius: 6px; cursor: pointer; color: #007bff; text-align: center; background-color: #f8f9fa;"
+      >
+        📤 Click to Upload Transaction Screenshot
+        <span *ngIf="selectedFileName" style="display: block; margin-top: 8px; color: green; font-weight: 500;">
+          ✔ {{ selectedFileName }}
+        </span>
+      </div>
+      <input 
+        #fileInput 
+        type="file" 
+        formControlName="depo_proof" 
+        (change)="onFileSelected($event)" 
+        class="d-none"
+      >
+      <div *ngIf="(depositFormControl.depo_proof.touched || submitted) && depositFormControl.depo_proof.errors?.required" style="color: red; margin-top: 6px; font-size: 14px;">
+        Please upload screenshot
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div *ngIf="selectedMethod === 'phonepe'" class="sub-options">
+      <h4 style="color:#000 !important;">PhonePe QR</h4>
+      <div class="scanner" style="
+    display: flex;
+    flex-direction: column;">
+          <div>
+       <span style="font-size: 14px; user-select: all; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;color:#000 !important;">
+    {{ phonepe }}
+  </span>
+
+  <button (click)="copyToClipboard(phonepe)" 
+          style="border: 1px solid #ccc; background: white; cursor: pointer; border-radius: 4px; padding: 4px;">
+    <!-- Copy SVG Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="black">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v16h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 18H8V7h11v16z"/>
+    </svg>
+  </button>
+  </div>
+          <img [src]="qrcode" alt="PhonePe">
+          </div>
+      <div class="utr-input" >
+           <div class="form-group" style="margin-bottom: 16px;">
+  <label class="label" style="color:#000 !important; display: block; font-weight: bold; margin-bottom: 8px;">Upload Screenshot</label>
+  
+  <div 
+    class="upload-box" 
+    (click)="fileInput.click()" 
+    style="padding: 12px; border: 2px dashed #007bff; border-radius: 6px; cursor: pointer; color: #007bff; text-align: center; background-color: #f8f9fa;"
+  >
+    📤 Click to Upload Transaction Screenshot
+    <span 
+      *ngIf="selectedFileName" 
+      class="file-indicator" 
+      style="display: block; margin-top: 8px; color: green; font-weight: 500;"
+    >
+      ✔ {{ selectedFileName }}
+    </span>
+  </div>
+
+  <input 
+    #fileInput 
+    type="file" 
+    formControlName="depo_proof" 
+    (change)="onFileSelected($event)" 
+    class="d-none"
+  >
+
+  <div 
+    class="text-danger"
+    *ngIf="(depositFormControl.depo_proof.touched || submitted) && depositFormControl.depo_proof.errors?.required"
+    style="color: red; margin-top: 6px; font-size: 14px;"
+  >
+    Please upload screenshot
+  </div>
+</div>
+
+        <label style="color:#000 !important;">UTR ID</label>
+        <input type="text" placeholder="Enter UTR ID">
+      </div>
+    </div>
+
+    <div *ngIf="selectedMethod === 'gpay'" class="sub-options">
+      <h4 style="color:#000 !important;">Google Pay</h4>
+        <div class="scanner" style="
+    display: flex;
+    flex-direction: column;">
+          <div>
+       <span style="font-size: 14px; user-select: all; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;color:#000 !important;">
+    {{ gpay }}
+  </span>
+
+  <button (click)="copyToClipboard(gpay)" 
+          style="border: 1px solid #ccc; background: white; cursor: pointer; border-radius: 4px; padding: 4px;">
+    <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="black">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v16h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 18H8V7h11v16z"/>
+    </svg>
+  </button>
+  
+  </div>
+            <img [src]="qrcode" alt="PhonePe">
+
+  </div>
+      <div class="utr-input">
+        <label style="color:#000 !important;">Transaction ID</label>
+        <input type="text" placeholder="Enter Transaction ID">
+      </div>
+    </div>
+
+    <div *ngIf="selectedMethod === 'paytm'" class="sub-options">
+      <h4 style="color:#000 !important;">Paytm</h4>
+        <div class="scanner" style="
+    display: flex;
+    flex-direction: column;">
+          <div>
+       <span style="font-size: 14px; user-select: all; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;color:#000 !important;">
+    {{ paytm }}
+  </span>
+
+  <button (click)="copyToClipboard(paytm)" 
+          style="border: 1px solid #ccc; background: white; cursor: pointer; border-radius: 4px; padding: 4px;">
+    <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="black">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v16h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 18H8V7h11v16z"/>
+    </svg>
+  </button>
+  
+  </div>
+            <img [src]="qrcode" alt="PhonePe">
+
+  </div>
+      <div class="utr-input">
+        <label style="color:#000 !important;">Reference No.</label>
+        <input type="text" placeholder="Enter Reference Number">
+      </div>
+    </div>
+
+    <div *ngIf="selectedMethod === 'bank'" class="sub-options">
+      <h4 style="color:#000 !important;">Bank Transfer</h4>
+      <div class="scanner">
+       <div style="font-family: Arial, sans-serif; max-width: 300px;">
+  <div style="margin-bottom: 10px;">
+    <label style="color:#000 !important;font-weight: bold;">Account No:</label><br>
+    <input id="accountNo" type="text" value="{{ accountNo }}" readonly style="width: 80%; padding: 5px; border: 1px solid #ccc;">
+    <span (click)="copyToClipboard(accountNo)" style="cursor: pointer; margin-left: 5px;">📋</span>
+  </div>
+
+  <div style="margin-bottom: 10px;">
+    <label style="color:#000 !important;font-weight: bold;">IFSC:</label><br>
+    <input id="ifsc" type="text" value="{{ ifsc }}" readonly style="width: 80%; padding: 5px; border: 1px solid #ccc;">
+    <span (click)="copyToClipboard(ifsc)" style="cursor: pointer; margin-left: 5px;">📋</span>
+  </div>
+
+  <div style="margin-bottom: 10px;">
+    <label style="color:#000 !important;font-weight: bold;">Bank Name:</label><br>
+    <input id="accountName" type="text" value="{{ accountName }}" readonly style="width: 80%; padding: 5px; border: 1px solid #ccc;">
+    <span (click)="copyToClipboard(accountName)" style="cursor: pointer; margin-left: 5px;">📋</span>
+  </div>
+
+ 
+</div>
+      </div>
+      <div class="utr-input">
+        <label style="color:#000 !important;">Transaction ID</label>
+        <input type="text" placeholder="Enter Transaction ID">
+      </div>
+    </div>
+
+    <div *ngIf="selectedMethod === 'autoupi'" class="sub-options">
+      <h4 style="color:#000 !important;">Instant UPI</h4>
+    </div>
+
+    <div class="info-text">Total amount with commission. The final amount may differ from the indicated.</div>
+    <button class="pay-button"  [disabled]="isDepositProceed" (click)="proceedDeposit()">Pay</button>
+  </div>
+</div>

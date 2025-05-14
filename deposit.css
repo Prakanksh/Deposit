@@ -1,0 +1,272 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f0f4ff;
+  color: #000;
+  padding: 20px;
+}
+.wallet-wrapper * {
+  
+}
+.label * {
+  color: #007bff !important;
+}
+
+.span * {
+  color: #007bff !important;
+}
+
+
+.wallet-wrapper {
+  background-color: #ffffff;
+  border-radius: 16px;
+  max-width: 1000px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 768px) {
+  .wallet-wrapper {
+    flex-direction: row;
+  }
+}
+
+.wallet-left, .wallet-right {
+  flex: 1;
+  padding: 24px;
+}
+
+.wallet-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.wallet-tabs button {
+  flex: 1;
+  padding: 10px;
+  background: #e7f0ff;
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.wallet-tabs .active,
+.wallet-tabs button:hover {
+  background: #007bff;
+  color: #fff;
+}
+
+.input-group label {
+  font-size: 14px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.amount-input {
+  background: #ffffff;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 100%;
+  color: #000;
+  margin-bottom: 12px;
+}
+
+.quick-amounts {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.quick-amounts button {
+  background: #f1f8ff;
+  border: 1px solid #cce0ff;
+  color: #000;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.quick-amounts button:hover,
+.quick-amounts button.active {
+  background: #007bff;
+  color: #fff;
+}
+
+.method-icons img {
+  width: 46px;
+  border-radius: 6px;
+  background: #e6f0ff;
+  padding: 4px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.method-icons img:hover,
+.method-icons img.active {
+  transform: scale(1.1);
+  background: #cce0ff;
+}
+
+.amount-pay {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.info-text {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.pay-button {
+  background-color: #007bff;
+  color: #fff;
+  font-weight: bold;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.pay-button:hover {
+  background: #0056b3;
+}
+
+.sub-options, .crypto-grid, .scanner, .utr-input {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.crypto-grid div {
+  padding: 10px;
+  background: #f1f8ff;
+  border: 1px solid #cce0ff;
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.crypto-grid div:hover {
+  background: #d0e7ff;
+}
+
+.scanner {
+  background: #f9fbff;
+  border: 1px solid #cce0ff;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #000;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 90%;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #ffffff;
+  color: #000;
+  padding: 15px 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.icon-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: 14%;
+}
+
+.icon-row img {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background-color: #fff;
+  padding: 5px;
+}
+
+.extra {
+  background-color: #e6f0ff;
+  color: #333;
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 8px;
+}
+
+.method-icons {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 30px;
+  width: 90%;
+}
+
+.mobile-icons {
+  align-items: center;
+  display: none;
+  overflow-x: auto;
+  padding: 10px;
+  gap: 10px;
+  background: #ffffff;
+  border-radius: 12px;
+}
+
+.mobile-icons img {
+  margin-right: 10px;
+}
+
+.active {
+  border: 2px solid #007bff;
+  background-color: #e6f0ff;
+  color: #000;
+}
+
+@media (max-width: 768px) {
+  .mobile-icons {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .card-container {
+    display: none;
+  }
+}
