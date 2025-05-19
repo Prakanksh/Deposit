@@ -9,6 +9,8 @@ import { WithdrawFormComponent } from "../modals/withdraw-form/withdraw-form.com
 import { DepositAutopayComponent } from "../modals/deposit-autopay/deposit-autopay.component";
 import { QrcodeShowComponent } from "../modals/qrcode-show/qrcode-show.component";
 import { ToastrService } from "ngx-toastr";
+import { HttpClient } from '@angular/common/http';
+
 const QRCode: any = require("qrcode");
 interface NetworkDetails {
   address: string;
@@ -29,6 +31,7 @@ export class DepositsComponent implements OnInit {
   depositAmount: number = 0;
   paymentUrl: any = "";
   isDepositProceed: boolean = false;
+  http: HttpClient;
 
   // manual deposit
   depositForm: any;
@@ -42,6 +45,7 @@ export class DepositsComponent implements OnInit {
   qrcode: any = "";
   currentPayment: any = "";
   methodval: any = "other";
+transactionId: string = '';
 
   // NEW UI SUPPORT
   selectedMethod: string = '';  // For UI card selection
@@ -61,6 +65,14 @@ export class DepositsComponent implements OnInit {
   selectedFileName: string = "";
 accountNo: string = ''; 
 ifsc: string = ''; 
+resetForm(): void {
+    this.depositForm.reset();
+    this.amountInput = 0;
+    this.transactionId = '';
+    this.selectedMethod = '';
+    this.selectedFile = null;
+    this.submitted = false;
+  }
 accountName: string = ''; 
   constructor(
     public dialog: MatDialog,
@@ -87,7 +99,7 @@ accountName: string = '';
       method: ["", Validators.required],
       transaction_id: ["", Validators.required],
       amount: ["", Validators.required],
-      depo_proof: [null, Validators.required],
+      depo_proof: ["", Validators.required],
       username: [this.username, Validators.required],
     });
 
@@ -304,13 +316,13 @@ cryptos = [
     this.submitted = true;
     if (this.depositForm.invalid) return;
 
-    // const formData = new FormData();
-    // formData.append("user_id", this.user_id || "");
-    // formData.append("username", this.username || "");
-    // formData.append("method", this.depositForm.value.method);
-    // formData.append("amount", this.depositForm.value.amount);
-    // formData.append("transaction_id", this.depositForm.value.transaction_id);
-    // formData.append("file", this.depositForm.get("depo_proof"));
+    const formData = new FormData();
+    formData.append("user_id", this.user_id || "");
+    formData.append("method", this.depositForm.value.method);
+    formData.append("amount", this.depositForm.value.amount);
+    formData.append("transaction_id", this.depositForm.value.transaction_id);
+    formData.append("username", this.username || "");
+    formData.append("file", this.selectedFile, this.selectedFile.name);
 
     this.transactionService.addDepositRequest(formData).subscribe((res: any) => {
       if (res.error) {
@@ -374,44 +386,28 @@ cryptos = [
   }
 
   proceedDeposit() {
-    console.log("Proceeding with deposit...");
-    
-    const formData = new FormData();
-    formData.append("user_id", this.user_id || "");
-    formData.append("method", this.depositForm.value.method);
-    formData.append("amount", this.depositForm.value.amount);
+      
     if (this.amountInput <= 0) {
       alert("Please enter a valid deposit amount!");
       return;
     }
     this.isDepositProceed = true;
-
-    // if ( this.selectedMethod === 'autoupi'){
-    //   this.submitManualDepositRequest();
-    // }else{
-        
-      // formData.append("transaction_id", this.depositForm.value.transaction_id);
-      // formData.append("username", this.username || "");
-      // formData.append('depo_proof', this.depositForm.get('depo_proof')?.value);
-      // console.log("Proceeding with deposit..." ,this.user_id, this.depositForm.value.method , this.depositForm.value.amount, this.depositForm.value.transaction_id ,  this.username  , this.selectedFile, this.selectedFile.name);
-
-    //   this.transactionService.testpayment({ amount: this.amountInput }).subscribe(
-    //     (res: any) => {
-    //       if (res.status) {
-    //         this.paymentUrl = res.payInfo;
-    //         this.redirectVPA();
-    //       } else {
-    //         alert(res.message);
-    //       }
-          this.isDepositProceed = false;
-    //     },
-    //     (error) => {
-    //       console.error("Payment API error:", error);
-    //       alert("Something went wrong, please try again.");
-    //       this.isDepositProceed = false;
-    //     }
-    //   );      
-    // }
+    this.transactionService.testpayment({ amount: this.amountInput }).subscribe(
+      (res: any) => {
+        if (res.status) {
+          this.paymentUrl = res.payInfo;
+          this.redirectVPA();
+        } else {
+          alert(res.message);
+        }
+        this.isDepositProceed = false;
+      },
+      (error) => {
+        console.error("Payment API error:", error);
+        alert("Something went wrong, please try again.");
+        this.isDepositProceed = false;
+      }
+    );
   }
 
   redirectVPA() {
@@ -432,21 +428,42 @@ cryptos = [
     this.amountInput = amount;
     this.displayAmount = "₹" + (this.amountInput + 0).toFixed(2);
   }
+ submitManualDepositRequest1() {
+     this.isDepositProceed = true;
+  const formData = new FormData();
+  formData.append('user_id', this.user_id ?? '');
+  formData.append('amount', this.amountInput.toString());
+  formData.append('method', this.selectedMethod);
+  formData.append('depo_proof', this.selectedFile);
+  formData.append('transaction_id', "0987654321");
+  formData.append('username', this.username || "unknown");
 
-  onAmountChange(value: string) {
+  this.transactionService.addManualDepositRequest(formData).subscribe({
+    next: (res: any) => {
+      if (res.error) {
+          this.isDepositProceed = false;
+        this.toastr.error(res.error);
+      } else {
+                    this.isDepositProceed = false;
 
-  const cleanValue = value.replace(/[₹,]/g, '');
-  const num = parseFloat(cleanValue);
-    console.log("::::", num);
-    
-  if (!isNaN(num)) {
-    this.amountInput = num;
-    this.displayAmount = '₹' + num.toFixed(2);
-  } else {
-    this.displayAmount = '';
-  }
+        this.toastr.success("Deposit request submitted successfully!");
+        this.resetForm();
+      }
+    },
+    error: () => {
+                  this.isDepositProceed = false;
+
+      this.toastr.error("Something went wrong. Try again.");
+    }
+  });
 }
 
+onAmountChange(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const cleanedValue = input.value.replace(/[^\d.]/g, '');
+  const numericValue = parseFloat(cleanedValue);
+  this.amountInput = isNaN(numericValue) ? 0 : numericValue;
+}
   get finalAmount(): string {
     return "₹" + (this.amountInput + 0).toFixed(2);
   }
@@ -457,4 +474,6 @@ cryptos = [
     console.error('Failed to copy text: ', err);
   });
 }
+
 }
+
